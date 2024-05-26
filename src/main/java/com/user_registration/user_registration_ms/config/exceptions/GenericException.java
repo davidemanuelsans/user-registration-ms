@@ -1,7 +1,10 @@
 package com.user_registration.user_registration_ms.config.exceptions;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class GenericException extends Exception {
     List<String> errors;
     String type;
@@ -35,8 +38,4 @@ public class GenericException extends Exception {
     protected GenericException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
-
-    public List<String> getErrors() { return errors; }
-
-    public String getType() { return type; }
 }

@@ -7,6 +7,8 @@ import com.user_registration.user_registration_ms.entities.Order;
 import com.user_registration.user_registration_ms.entities.User;
 import com.user_registration.user_registration_ms.repositories.OrderRepository;
 import com.user_registration.user_registration_ms.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
+
+    Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     @Autowired
     private OrderRepository orderRepository;

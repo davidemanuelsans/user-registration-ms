@@ -1,5 +1,6 @@
 package com.user_registration.user_registration_ms.config;
 
+import com.user_registration.user_registration_ms.config.exceptions.ConflictResourceException;
 import com.user_registration.user_registration_ms.config.exceptions.CustomRestException;
 import com.user_registration.user_registration_ms.config.exceptions.GenericException;
 import com.user_registration.user_registration_ms.config.exceptions.NotFoundException;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -79,6 +81,34 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getMessage(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
                 HttpStatus.BAD_REQUEST.value()
+        );
+
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler({UsernameNotFoundException.class})
+    public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+
+        CustomRestException error = new CustomRestException(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                ex.getMessage(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
+                HttpStatus.NOT_FOUND.value()
+        );
+
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler({ConflictResourceException.class})
+    public ResponseEntity<Object> handleConflictResourceException(ConflictResourceException ex) {
+
+        CustomRestException error = new CustomRestException(
+                HttpStatus.CONFLICT,
+                ex.getMessage(),
+                ex.getMessage(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
+                HttpStatus.CONFLICT.value()
         );
 
         return new ResponseEntity<>(error, error.getStatus());
