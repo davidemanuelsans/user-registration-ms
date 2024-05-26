@@ -4,6 +4,7 @@ import com.user_registration.user_registration_ms.config.exceptions.CustomRestEx
 import com.user_registration.user_registration_ms.config.exceptions.GenericException;
 import com.user_registration.user_registration_ms.config.exceptions.NotFoundException;
 import com.user_registration.user_registration_ms.config.exceptions.UnauthorizedException;
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -64,4 +65,19 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(error, error.getStatus());
     }
+
+    @ExceptionHandler({ValidationException.class})
+    public ResponseEntity<Object> handleValidationExceptionException(UnauthorizedException ex) {
+
+        CustomRestException error = new CustomRestException(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                ex.getMessage(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
+                HttpStatus.BAD_REQUEST.value()
+        );
+
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
 }

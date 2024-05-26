@@ -42,11 +42,6 @@ public class JWTSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
-            .headers(httpSecurityHeadersConfigurer -> {
-                httpSecurityHeadersConfigurer.frameOptions(frameOptionsConfig -> {
-                    frameOptionsConfig.disable();
-                });
-            })
             .authorizeHttpRequests( authorize -> authorize
                     .requestMatchers("/v3/api-docs/**").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()

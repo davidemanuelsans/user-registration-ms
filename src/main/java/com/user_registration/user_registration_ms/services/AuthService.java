@@ -10,6 +10,8 @@ import com.user_registration.user_registration_ms.dtos.UserResponseDto;
 import com.user_registration.user_registration_ms.entities.Role;
 import com.user_registration.user_registration_ms.entities.User;
 import com.user_registration.user_registration_ms.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
+
+    Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -41,15 +45,13 @@ public class AuthService {
         User userEntity = new User();
         userEntity.setEmail(email);
         userEntity.setPassword(encoder.encode(requestDto.getPassword()));
-        userEntity.setFirstName(requestDto.getFirstName());
-        userEntity.setLastName(requestDto.getLastName());
+        userEntity.setName(requestDto.getName());
         userEntity.setRole(Role.USER);
         userEntity = userRepository.save(userEntity);
 
         return new UserResponseDto(userEntity.getId(),
                 email,
-                userEntity.getFirstName(),
-                userEntity.getLastName()
+                userEntity.getName()
         );
     }
 
@@ -61,8 +63,10 @@ public class AuthService {
 
             UserLoginResponse response = new UserLoginResponse();
             response.setId(user.getId());
+            response.setToken(token);
             return response;
         } catch (Exception e) {
+            logger.error("[login] Error when logging in: {}", e.getMessage());
             // Details omitted in order to ofuscate unathentication details
             throw new UnauthorizedException("Unable to login");
         }

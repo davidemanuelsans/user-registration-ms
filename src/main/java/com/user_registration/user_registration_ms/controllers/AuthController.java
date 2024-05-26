@@ -7,6 +7,7 @@ import com.user_registration.user_registration_ms.dtos.UserLoginDto;
 import com.user_registration.user_registration_ms.dtos.UserLoginResponse;
 import com.user_registration.user_registration_ms.dtos.UserResponseDto;
 import com.user_registration.user_registration_ms.services.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public UserResponseDto register(@RequestBody CreateUserRequestDto requestDto)
+    public UserResponseDto register(@Valid @RequestBody CreateUserRequestDto requestDto)
             throws GenericException {
         return authService.createUser(requestDto);
     }

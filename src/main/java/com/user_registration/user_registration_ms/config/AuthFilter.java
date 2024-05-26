@@ -40,25 +40,24 @@ public class AuthFilter extends OncePerRequestFilter {
         String email = jwtUtils.getEmailFromToken(authHeader);
 
         if (email == null || SecurityContextHolder.getContext().getAuthentication() != null) {
-
+            filterChain.doFilter(request, response);
+            return;
         }
 
         UserDetails userDetails = userRepository
                 .findByEmail(email)
                 .orElseThrow( () -> new UsernameNotFoundException("Email not found"));
 
-        if (!jwtUtils.isTokenValid(authHeader, userDetails)) {
-            filterChain.doFilter(request, response);
-            return;
+        if (jwtUtils.isTokenValid(authHeader, userDetails)) {
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities());
+
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            SecurityContextHolder.getContext().setAuthentication(authToken);
         }
-
-        UsernamePasswordAuthenticationToken authToken= new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities());
-
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+        filterChain.doFilter(request, response);
     }
 }

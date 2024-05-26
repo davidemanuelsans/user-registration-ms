@@ -21,7 +21,7 @@ import java.util.function.Function;
 public class JWTUtils {
 
     private int TOKEN_EXPIRATION_MINUTES = 15;
-    private String KEY = "pepepee";
+    private static String KEY = "4A7D354C5B6E317F2A593647783C4D5F614258396F2E573265423774396B4D7E";
 
     public String generateToken(User user) {
         return this.generateToken(new HashMap<>(), user);
@@ -37,7 +37,7 @@ public class JWTUtils {
                 .setSubject(subject)
                 .setIssuedAt(Date.from(issuedAt.atZone(ZoneId.systemDefault()).toInstant()))
                 .setExpiration(Date.from(expiresAt.atZone(ZoneId.systemDefault()).toInstant()))
-                .signWith(getKey(), SignatureAlgorithm.ES256)
+                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
