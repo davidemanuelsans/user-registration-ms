@@ -5,10 +5,14 @@ import com.user_registration.user_registration_ms.config.exceptions.GenericExcep
 import com.user_registration.user_registration_ms.config.exceptions.NotFoundException;
 import com.user_registration.user_registration_ms.config.exceptions.UnauthorizedException;
 import jakarta.validation.ValidationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
@@ -67,11 +71,26 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({ValidationException.class})
-    public ResponseEntity<Object> handleValidationExceptionException(UnauthorizedException ex) {
+    public ResponseEntity<Object> handleValidationException(ValidationException ex) {
 
         CustomRestException error = new CustomRestException(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage(),
+                ex.getMessage(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
+                HttpStatus.BAD_REQUEST.value()
+        );
+
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String errorMessage = ex.getFieldError() != null ?  ex.getFieldError().getDefaultMessage() : ex.getMessage();
+
+        CustomRestException error = new CustomRestException(
+                HttpStatus.BAD_REQUEST,
+                errorMessage,
                 ex.getMessage(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
                 HttpStatus.BAD_REQUEST.value()
