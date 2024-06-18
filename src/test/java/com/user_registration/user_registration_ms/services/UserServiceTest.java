@@ -90,4 +90,9 @@ class UserServiceTest {
         verify(userRepository, times(1)).findByEmail(anyString());
         verify(userRepository, times(1)).save(any(User.class));
     }
+
+    @Test
+    void forceAFailedTest() {
+        assertEquals(0,1);
+    }
 }
