@@ -41,7 +41,26 @@ mvn spring-boot:run
 mvn test
 ```
 
+## Deploy en AWS
 
+Tutorial aca: https://rajesh-gupta89.medium.com/deploy-spring-boot-app-from-github-into-aws-using-beanstalk-45b486aeddf9
+El buildspec es este
+```
+version: 0.2
+ 
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+  build:
+    commands:
+      - mvn clean install 
+      - mvn test
+artifacts:
+  files:
+    - target/user-registration-ms-0.0.1-SNAPSHOT.jar
+  discard-paths: yes
+```
 
 ## Verificación
 
