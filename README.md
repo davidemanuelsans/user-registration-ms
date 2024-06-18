@@ -26,14 +26,14 @@ mvn install
 ## Ejecutar la aplicación
 
 ```
-ejecutar
+mvn spring-boot:run
 
 ```
 
 ## Pruebas
 
 ```
-probar
+mvn test
 
 ```
 
